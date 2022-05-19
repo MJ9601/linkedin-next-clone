@@ -3,6 +3,7 @@ import Head from "next/head";
 import { MantineProvider } from "@mantine/core";
 import { NextPage } from "next";
 import { ReactElement, ReactNode } from "react";
+import { SessionProvider } from "next-auth/react";
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -28,7 +29,9 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         withNormalizeCSS
         theme={{ colorScheme: "light" }}
       >
-        {getLayout(<Component {...pageProps} />)}
+        <SessionProvider session={pageProps.session}>
+          {getLayout(<Component {...pageProps} />)}
+        </SessionProvider>
       </MantineProvider>
     </>
   );
