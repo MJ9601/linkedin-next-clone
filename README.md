@@ -1,6 +1,6 @@
 ## Project review
 
-This Project is a simple linkedin clone which is created bootstraped using [create-next-app] in [typescript] template.
+This Project is a simple linkedin clone which is created using [create-next-app] in [typescript] template.
 
 ## Getting Started
 
