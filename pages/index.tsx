@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { useEffect } from "react";
 
 const Home = () => {
@@ -22,5 +22,14 @@ const Home = () => {
 
 export default Home;
 
-// https://rb.gy/vtbzlp logo
-// https://rb.gy/vkzpzt pic
+export const getServerSideProps = async (ctx: any) => {
+  const session = await getSession(ctx);
+
+  if (!session) return { notFound: true };
+
+  return {
+    props: {
+      session,
+    },
+  };
+};
