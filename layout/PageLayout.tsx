@@ -2,6 +2,7 @@ import {
   AppShell,
   Aside,
   Avatar,
+  Button,
   Card,
   Center,
   Container,
@@ -11,9 +12,11 @@ import {
   Header,
   MediaQuery,
   Navbar,
+  Paper,
   Stack,
   Text,
   TextInput,
+  Title,
 } from "@mantine/core";
 import Image from "next/image";
 import { ReactElement } from "react";
@@ -24,11 +27,13 @@ import {
   BriefcaseIcon,
   ChatIcon,
   HomeIcon,
+  InformationCircleIcon,
   PlusIcon,
   UsersIcon,
 } from "@heroicons/react/solid";
 import HeaderIcons from "../components/HeaderIcons";
 import { useSession } from "next-auth/react";
+import NewsCard from "../components/NewsCard";
 
 const PageLayout = ({ children }: { children: ReactElement }) => {
   const { data: session, status } = useSession();
@@ -36,7 +41,7 @@ const PageLayout = ({ children }: { children: ReactElement }) => {
     <AppShell
       sx={{ background: "rgb(245, 247, 248)" }}
       header={
-        <Header height={60} sx={{ position: "sticky", top: "0" }}>
+        <Header height={60} sx={{ position: "sticky", top: "0", zIndex: 999 }}>
           <Container sx={{ minWidth: "89vw" }}>
             <Group grow align="center" position="apart">
               <Group align="center" position="left" spacing="xs">
@@ -140,7 +145,11 @@ const PageLayout = ({ children }: { children: ReactElement }) => {
                 </Center>
               </Card>
 
-              <Card shadow="md" p="lg" sx={{ minWidth: 258 }}>
+              <Card
+                shadow="md"
+                p="lg"
+                sx={{ minWidth: 258, position: "sticky", top: "65px" }}
+              >
                 <Stack align="start">
                   <Text
                     size="md"
@@ -150,11 +159,12 @@ const PageLayout = ({ children }: { children: ReactElement }) => {
                   >
                     Groups
                   </Text>
-                  <Group
-                    grow
-                    position="apart"
-                    align="center"
-                    sx={{ width: "100%" }}
+                  <Center
+                    sx={{
+                      width: "100%",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
                   >
                     <Text
                       size="md"
@@ -165,7 +175,7 @@ const PageLayout = ({ children }: { children: ReactElement }) => {
                       Events
                     </Text>
                     <PlusIcon style={{ height: "25px" }} />
-                  </Group>
+                  </Center>
                   <Text
                     size="md"
                     color="blue"
@@ -194,21 +204,76 @@ const PageLayout = ({ children }: { children: ReactElement }) => {
             width={{ base: "25%", lg: "30%" }}
             sx={{ background: "rgb(245, 247, 248)" }}
           >
-            <Stack align="left">
+            <Stack align="left" spacing="md">
               <Card shadow="md" px="sm" sx={{ maxWidth: 300 }}>
-                <Stack align='start' justify="start" spacing='md'>
-                  
+                <Stack
+                  align="start"
+                  justify="start"
+                  spacing="md"
+                  sx={{ width: "100%" }}
+                >
+                  <Center
+                    sx={{ width: "100%", justifyContent: "space-between" }}
+                  >
+                    <Text size="md" weight={500}>
+                      Linkedin News
+                    </Text>
+                    <InformationCircleIcon
+                      style={{ height: "25px", color: "#444" }}
+                    />
+                  </Center>
+                  {/* new section */}
+                  <NewsCard />
+                  <NewsCard />
+                  <NewsCard />
+                  <NewsCard />
+                  <NewsCard />
                 </Stack>
               </Card>
+              <Paper
+                shadow="md"
+                sx={{ maxWidth: 300, overflow: "hidden", position: "relative" }}
+              >
+                <img
+                  src="/work.jpeg"
+                  style={{ width: "100%", height: "100%" }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "0",
+                    left: "0",
+                    width: "100%",
+                    height: "100%",
+                    background: "linear-gradient(to right, #444, transparent)",
+                  }}
+                >
+                  <Title
+                    order={3}
+                    style={{
+                      padding: "15px",
+                      width: "75%",
+                      color: "white",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Find your dream Job with Us
+                  </Title>
+                  <Button
+                    variant="filled"
+                    color="blue"
+                    sx={{ position: "absolute", bottom: "20px", left: "10px" }}
+                  >
+                    Search for Jobs
+                  </Button>
+                </div>
+              </Paper>
             </Stack>
           </Aside>
         </MediaQuery>
       }
       footer={
-        <Footer
-          height={100}
-          sx={{ background: "black", position: "sticky", bottom: "0" }}
-        >
+        <Footer height={100} sx={{ background: "black" }}>
           <Group></Group>
         </Footer>
       }
