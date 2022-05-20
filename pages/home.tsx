@@ -12,10 +12,23 @@ import {
 } from "@mantine/core";
 import Head from "next/head";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { ChevronRight } from "tabler-icons-react";
-import { signIn } from "next-auth/react";
-const Home_ = () => {
+import { getProviders, signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+const Home_ = ({
+  providers,
+}: {
+  providers: {
+    google: {
+      callbackUrl: string;
+      id: string;
+      name: string;
+      type: string;
+      signinUrl: string;
+    };
+  };
+}) => {
   return (
     <>
       <Head>
@@ -26,7 +39,13 @@ const Home_ = () => {
           <Container px="xl" mx="auto" sx={{ minWidth: "80%" }}>
             <Group align="center" noWrap position="apart">
               <Image src="/logo.svg" width={170} height={60} />
-              <Button variant="outline" color="blue" onClick={() => signIn()}>
+              <Button
+                variant="outline"
+                color="blue"
+                onClick={() =>
+                  signIn(providers.google.id, { callbackUrl: "/" })
+                }
+              >
                 Sign in
               </Button>
             </Group>
@@ -123,3 +142,13 @@ const Home_ = () => {
 };
 
 export default Home_;
+
+export const getServerSideProps = async () => {
+  const providers = await getProviders();
+
+  return {
+    props: {
+      providers,
+    },
+  };
+};

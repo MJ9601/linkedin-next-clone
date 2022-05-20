@@ -1,35 +1,20 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { getSession, useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { ReactElement, useEffect } from "react";
+import PageLayout from "../layout/PageLayout";
 
 const Home = () => {
-  const router = useRouter();
   const { data: session, status } = useSession();
-  useEffect(() => {
-    if (!session) router.push("/home");
-  }, [session]);
-
   return (
     <>
       <Head>
-        <title>linkedin clone</title>
+        <title>{session?.user?.name}</title>
       </Head>
       <div>linkedin clone next app</div>
     </>
   );
 };
 
+Home.getLayout = (page: ReactElement) => <PageLayout>{page}</PageLayout>;
 export default Home;
-
-export const getServerSideProps = async (ctx: any) => {
-  const session = await getSession(ctx);
-
-  if (!session) return { notFound: true };
-
-  return {
-    props: {
-      session,
-    },
-  };
-};

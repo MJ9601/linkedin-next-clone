@@ -17,7 +17,7 @@ export default NextAuth({
   session: {
     strategy: "jwt",
   },
-  secret: process.env.JWT_SECRET || "changeMe",
+  secret: String(process.env.NEXTAUTH_SECRET),
   jwt: {
     maxAge: 60 * 60 * 24 * 15,
   },
