@@ -1,5 +1,4 @@
-import { Avatar, Box, MediaQuery, Stack, Text } from "@mantine/core";
-import { ReactElement, ReactNode } from "react";
+import { Avatar, Box, MediaQuery, Text } from "@mantine/core";
 import { Icon } from "tabler-icons-react";
 
 const HeaderIcons = ({

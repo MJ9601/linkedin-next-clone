@@ -1,4 +1,4 @@
-import { Center, Stack, Text } from "@mantine/core";
+import { Center, Stack} from "@mantine/core";
 import { Circle } from "tabler-icons-react";
 
 const NewsCard = () => {

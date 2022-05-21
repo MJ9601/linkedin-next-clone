@@ -20,7 +20,7 @@ import {
 } from "@mantine/core";
 import Image from "next/image";
 import { ReactElement } from "react";
-import { GridDots, Home, Search } from "tabler-icons-react";
+import { GridDots, Search } from "tabler-icons-react";
 import {
   BellIcon,
   BookmarkIcon,

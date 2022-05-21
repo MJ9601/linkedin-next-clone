@@ -1,26 +1,8 @@
-import { ThumbUpIcon } from "@heroicons/react/outline";
+import { ChatAltIcon, ThumbUpIcon } from "@heroicons/react/outline";
 import { Button, createStyles, Divider, Group, Paper } from "@mantine/core";
 import { useSession } from "next-auth/react";
+import { Send } from "tabler-icons-react";
 import PostCardHeader from "./PostCardHeader";
-
-const useStyle = createStyles((theme) => ({
-  wrapper: {
-    margin: "10px 0",
-    padding: "0",
-    width: "100%",
-    height: "fit-content",
-  },
-  text: {
-    fontWeight: 500,
-    fontSize: "15px",
-    padding: "0 19px",
-    lineHeight: "22px",
-  },
-  img: {
-    width: "100%",
-    objectFit: "contain",
-  },
-}));
 
 const PostCard = ({ post }: { post: any }) => {
   const { classes } = useStyle();
@@ -47,6 +29,7 @@ const PostCard = ({ post }: { post: any }) => {
           variant="white"
           color="dark"
           size="xs"
+          sx={{ ":hover": { color: "blue" } }}
           leftIcon={
             <ThumbUpIcon
               style={{ height: "20px", padding: "0", margin: "0" }}
@@ -55,9 +38,52 @@ const PostCard = ({ post }: { post: any }) => {
         >
           Like
         </Button>
+        <Button
+          variant="white"
+          color="dark"
+          size="xs"
+          sx={{ ":hover": { color: "blue" } }}
+          leftIcon={
+            <ChatAltIcon
+              style={{ height: "20px", padding: "0", margin: "0" }}
+            />
+          }
+        >
+          Comment
+        </Button>
+        <Button
+          variant="white"
+          color="dark"
+          size="xs"
+          sx={{ ":hover": { color: "blue" } }}
+          leftIcon={
+            <Send style={{ height: "20px", padding: "0", margin: "0" }} />
+          }
+        >
+          Share
+        </Button>
       </Group>
     </Paper>
   );
 };
 
 export default PostCard;
+
+const useStyle = createStyles((theme) => ({
+  wrapper: {
+    margin: "10px 0",
+    padding: "0",
+    width: "100%",
+    height: "fit-content",
+  },
+  text: {
+    fontWeight: 500,
+    fontSize: "15px",
+    padding: "0 19px",
+    lineHeight: "22px",
+  },
+  img: {
+    width: "100%",
+    objectFit: "contain",
+  },
+}));

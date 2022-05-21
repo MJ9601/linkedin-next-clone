@@ -12,10 +12,8 @@ import {
 } from "@mantine/core";
 import Head from "next/head";
 import Image from "next/image";
-import React, { useEffect } from "react";
 import { ChevronRight } from "tabler-icons-react";
-import { getProviders, signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import { getProviders, signIn } from "next-auth/react";
 const Home_ = ({
   providers,
 }: {
