@@ -25,7 +25,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         />
       </Head>
       <MantineProvider
-        withGlobalStyles
+        // withGlobalStyles
         withNormalizeCSS
         theme={{ colorScheme: "light" }}
       >

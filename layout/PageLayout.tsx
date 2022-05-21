@@ -45,28 +45,27 @@ const PageLayout = ({ children }: { children: ReactElement }) => {
           <Container sx={{ minWidth: "89vw" }}>
             <Group grow align="center" position="apart">
               <Group align="center" position="left" spacing="xs">
-                <Image src="/logo.png" height={60} width={60} />
+                <MediaQuery smallerThan="sm" styles={{ maxWidth: "5%" }}>
+                  <Image src="/logo.png" height={60} width={60} />
+                </MediaQuery>
                 <MediaQuery smallerThan="md" styles={{ display: "none" }}>
                   <TextInput placeholder="Search" icon={<Search size={14} />} />
                 </MediaQuery>
               </Group>
-              <Group
-                align="center"
-                sx={{ minWidth: "60%" }}
-                position="right"
-                spacing="md"
-              >
-                <HeaderIcons title="Home" Icon={HomeIcon} active />
-                <HeaderIcons title="My Network" Icon={UsersIcon} />
-                <HeaderIcons title="Jobs" Icon={BriefcaseIcon} />
-                <HeaderIcons title="Messaging" Icon={ChatIcon} />
-                <HeaderIcons title="Notifications" Icon={BellIcon} />
-                <HeaderIcons
-                  title="Me"
-                  AvatarSrc={session?.user?.image || ""}
-                />
-                <HeaderIcons title="Work" Icon={GridDots} />
-              </Group>
+              <MediaQuery smallerThan="xs" styles={{ minWidth: "76%" }}>
+                <Group align="center" position="right" spacing="sm">
+                  <HeaderIcons title="Home" Icon={HomeIcon} active />
+                  <HeaderIcons title="My Network" Icon={UsersIcon} />
+                  <HeaderIcons title="Jobs" Icon={BriefcaseIcon} />
+                  <HeaderIcons title="Messaging" Icon={ChatIcon} />
+                  <HeaderIcons title="Notifications" Icon={BellIcon} />
+                  <HeaderIcons
+                    title="Me"
+                    AvatarSrc={session?.user?.image || ""}
+                  />
+                  <HeaderIcons title="Work" Icon={GridDots} />
+                </Group>
+              </MediaQuery>
             </Group>
           </Container>
         </Header>
