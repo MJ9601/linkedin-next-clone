@@ -41,7 +41,7 @@ const PageLayout = ({ children }: { children: ReactElement }) => {
     <AppShell
       sx={{ background: "rgb(245, 247, 248)" }}
       header={
-        <Header height={60} sx={{ position: "sticky", top: "0", zIndex: 999 }}>
+        <Header height={60} sx={{ position: "sticky", top: "0", zIndex: 3 }}>
           <Container sx={{ minWidth: "89vw" }}>
             <Group grow align="center" position="apart">
               <Group align="center" position="left" spacing="xs">
@@ -75,7 +75,7 @@ const PageLayout = ({ children }: { children: ReactElement }) => {
           <Navbar
             width={{ base: 290, lg: "30%" }}
             px="xs"
-            sx={{ background: "rgb(245, 247, 248)" }}
+            sx={{ background: "rgb(245, 247, 248)", zIndex: 2 }}
           >
             <Stack align="end" pr="sm" pt="md" spacing="md">
               <Card shadow="md" p="lg" sx={{ maxWidth: 258 }}>
@@ -201,7 +201,7 @@ const PageLayout = ({ children }: { children: ReactElement }) => {
             p="md"
             hiddenBreakpoint="sm"
             width={{ base: "25%", lg: "30%" }}
-            sx={{ background: "rgb(245, 247, 248)" }}
+            sx={{ background: "rgb(245, 247, 248)", zIndex: 2 }}
           >
             <Stack align="left" spacing="md">
               <Card shadow="md" px="sm" sx={{ maxWidth: 300 }}>
