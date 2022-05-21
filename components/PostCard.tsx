@@ -1,27 +1,34 @@
 import { ChatAltIcon, ThumbUpIcon } from "@heroicons/react/outline";
 import { Button, createStyles, Divider, Group, Paper } from "@mantine/core";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { Send } from "tabler-icons-react";
 import PostCardHeader from "./PostCardHeader";
 
-const PostCard = ({ post }: { post: any }) => {
-  const { classes } = useStyle();
+const PostCard = ({ post, postPage }: { post: any; postPage?: boolean }) => {
+  const { classes } = useStyle({ postPage });
   const { data: session, status } = useSession();
+  const router = useRouter();
   return (
     <Paper shadow="md" radius="md" py="sm">
-      <PostCardHeader info={""} />
-      <div className={classes.wrapper}>
-        <p className={classes.text}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis autem
-          aliquam reprehenderit molestiae ratione, qui totam asperiores quae
-          illum, ipsum a porro culpa accusantium dolorum.
-        </p>
-        {post.image && (
-          <img
-            className={classes.img}
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMJ86C4k1NiGgExR5nL_EVmOX10eKWM5vFwlsp9b0nvhXvbvXAIMnhqBqjZRZLCzIoaSY&usqp=CAU"
-          />
-        )}
+      <div
+        style={{ cursor: "pointer" }}
+        onClick={() => router.push("/post/12")}
+      >
+        <PostCardHeader info={""} />
+        <div className={classes.wrapper}>
+          <p className={classes.text}>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis autem
+            aliquam reprehenderit molestiae ratione, qui totam asperiores quae
+            illum, ipsum a porro culpa accusantium dolorum.
+          </p>
+          {post.image && (
+            <img
+              className={classes.img}
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMJ86C4k1NiGgExR5nL_EVmOX10eKWM5vFwlsp9b0nvhXvbvXAIMnhqBqjZRZLCzIoaSY&usqp=CAU"
+            />
+          )}
+        </div>
       </div>
       <Divider my="sm" />
       <Group position="apart" px="md">
@@ -69,21 +76,29 @@ const PostCard = ({ post }: { post: any }) => {
 
 export default PostCard;
 
-const useStyle = createStyles((theme) => ({
-  wrapper: {
-    margin: "10px 0",
-    padding: "0",
-    width: "100%",
-    height: "fit-content",
-  },
-  text: {
-    fontWeight: 500,
-    fontSize: "15px",
-    padding: "0 19px",
-    lineHeight: "22px",
-  },
-  img: {
-    width: "100%",
-    objectFit: "contain",
-  },
-}));
+const useStyle = createStyles(
+  (theme, { postPage }: { postPage?: boolean }) => ({
+    wrapper: {
+      margin: "10px 0",
+      padding: "0",
+      width: "100%",
+      height: "fit-content",
+    },
+    text: {
+      fontWeight: 500,
+      fontSize: "15px",
+      padding: "0 19px",
+      lineHeight: "22px",
+      width: "90%",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      WebkitLineClamp: 2,
+      WebkitBoxOrient: "vertical",
+      display: postPage ? "block" : "-webkit-box",
+    },
+    img: {
+      width: "100%",
+      objectFit: "contain",
+    },
+  })
+);

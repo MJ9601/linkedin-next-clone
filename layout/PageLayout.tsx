@@ -231,11 +231,16 @@ const PageLayout = ({ children }: { children: ReactElement }) => {
               </Card>
               <Paper
                 shadow="md"
-                sx={{ maxWidth: 300, overflow: "hidden", position: "relative" }}
+                sx={{
+                  maxWidth: 300,
+                  minHeight: 250,
+                  overflow: "hidden",
+                  position: "relative",
+                }}
               >
                 <img
                   src="/work.jpeg"
-                  style={{ width: "100%", height: "100%" }}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
                 <div
                   style={{
@@ -250,7 +255,7 @@ const PageLayout = ({ children }: { children: ReactElement }) => {
                   <Title
                     order={3}
                     style={{
-                      padding: "15px",
+                      padding: "45px 15px",
                       width: "75%",
                       color: "white",
                       fontWeight: 500,
@@ -258,11 +263,7 @@ const PageLayout = ({ children }: { children: ReactElement }) => {
                   >
                     Find your dream Job with Us
                   </Title>
-                  <Button
-                    variant="filled"
-                    color="blue"
-                    sx={{ position: "absolute", bottom: "20px", left: "10px" }}
-                  >
+                  <Button variant="filled" color="blue" mx={20}>
                     Search for Jobs
                   </Button>
                 </div>
