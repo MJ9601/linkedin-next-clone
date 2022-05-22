@@ -23,6 +23,8 @@ import {
 } from "@heroicons/react/solid";
 import { FileUpload, Notes } from "tabler-icons-react";
 import { Dropzone } from "@mantine/dropzone";
+import { Post } from "../typing";
+import { useEffect } from "react";
 
 const useStyles = createStyles((theme) => ({
   postCreater: {
@@ -52,10 +54,43 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const Home = () => {
+const Home = ({ posts }: { posts: Post[] }) => {
   const { data: session, status } = useSession();
   const { classes } = useStyles();
   const [opened, setOpened] = useState(false);
+  const [file, setFile] = useState<null | File>(null);
+  const [fileUrl, setFileUrl] = useState("");
+  const [text, setText] = useState("");
+  const [_posts, setPosts] = useState<[] | Post[]>(posts);
+
+  useEffect(() => {
+    let getpost = setInterval(async () => {
+      const response = await (await fetch("/api/posts")).json();
+      setPosts(response);
+    }, 60 * 60 * 2);
+    return () => {
+      clearInterval(getpost);
+    };
+  }, [text]);
+
+  const createPost = async () => {
+    if (!file) {
+      await (
+        await fetch("/api/posts", {
+          method: "POST",
+          body: JSON.stringify({
+            text: text,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      ).json();
+    }
+    setText("");
+    setOpened(false);
+  };
+
   return (
     <>
       <Head>
@@ -70,6 +105,8 @@ const Home = () => {
           autosize
           maxRows={10}
           mb="lg"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
         />
         <Dropzone onDrop={(files) => {}}>
           {(status) => (
@@ -80,7 +117,7 @@ const Home = () => {
             </div>
           )}
         </Dropzone>
-        <Button mt="md" fullWidth>
+        <Button mt="md" fullWidth onClick={createPost}>
           Publish
         </Button>
       </Modal>
@@ -105,9 +142,9 @@ const Home = () => {
         </Paper>
         <Divider my="sm" />
         <Stack spacing="xs">
-          <PostCard post={""} />
-          <PostCard post={""} />
-          <PostCard post={""} />
+          {_posts?.map((post) => (
+            <PostCard post={post} key={post._id} />
+          ))}
         </Stack>
       </div>
     </>
@@ -116,3 +153,16 @@ const Home = () => {
 
 Home.getLayout = (page: ReactElement) => <PageLayout>{page}</PageLayout>;
 export default Home;
+
+export const getServerSideProps = async () => {
+  const baseUrl = process.env.BASE_URL || "http://localhost:3000";
+
+  const url = `${baseUrl}/api/posts`;
+  const posts = await (await fetch(url)).json();
+
+  return {
+    props: {
+      posts,
+    },
+  };
+};

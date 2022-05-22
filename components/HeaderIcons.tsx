@@ -1,4 +1,7 @@
 import { Avatar, Box, MediaQuery, Text } from "@mantine/core";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { Icon } from "tabler-icons-react";
 
 const HeaderIcons = ({
@@ -12,6 +15,14 @@ const HeaderIcons = ({
   AvatarSrc?: string;
   active?: boolean;
 }) => {
+  const router = useRouter();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/home");
+    },
+  });
+
   return (
     <Box
       sx={{
@@ -31,7 +42,13 @@ const HeaderIcons = ({
       {Icon ? (
         <Icon style={{ height: "25px" }} />
       ) : (
-        <Avatar src={AvatarSrc} alt="" radius={"xl"} size="sm" />
+        <Avatar
+          src={AvatarSrc}
+          alt=""
+          radius={"xl"}
+          size="sm"
+          onClick={() => signOut()}
+        />
       )}
       <MediaQuery smallerThan="md" styles={{ display: "none" }}>
         <Text p={0} weight={500} size="sm">
