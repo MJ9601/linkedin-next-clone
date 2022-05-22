@@ -1,6 +1,7 @@
 import { Db, ObjectId } from "mongodb";
 import { decode } from "next-auth/jwt";
 import { connectToDB } from "../util/mongodbConnection";
+import { Comment } from "../../typing";
 
 export const createNewPost = async ({
   body,
@@ -17,7 +18,7 @@ export const createNewPost = async ({
     secret: String(process.env.NEXTAUTH_SECRET),
   });
 
-  const post = { ...body, author: decoded?.sub };
+  const post = { ...body, author: decoded?.sub, likes: [], comments: [] };
   try {
     const newPost = await db
       .collection("posts")
@@ -74,5 +75,62 @@ export const deletePostById = async (id: string, accessToken: string) => {
     return { status: 403 };
   } catch (err) {
     return { err };
+  }
+};
+
+export const updatePostLikes = async (id: string, accessToken: string) => {
+  const { db } = await connectToDB();
+
+  const decoded = await decode({
+    token: accessToken,
+    secret: String(process.env.NEXTAUTH_SECRET),
+  });
+  try {
+    const post = await db
+      .collection("posts")
+      .updateOne(
+        { _id: new ObjectId(id) },
+        { $addToSet: { likes: { $each: [decoded?.sub] } } }
+      );
+    return { post };
+  } catch (err) {
+    return { err };
+  }
+};
+
+export const updatePostComments = async (
+  id: string,
+  accessToken: string,
+  body: Pick<Comment, "text">
+) => {
+  const { db } = await connectToDB();
+  const decoded = await decode({
+    token: accessToken,
+    secret: String(process.env.NEXTAUTH_SECRET),
+  });
+
+  try {
+    const post = await db.collection("posts").updateOne(
+      { _id: new ObjectId(id) },
+      {
+        $push: {
+          comments: {
+            $each: [
+              {
+                ...body,
+                author: decoded?.sub,
+                post: id,
+                createdAt: new Date(),
+              },
+            ],
+          },
+        },
+      }
+    );
+    return { post };
+  } catch (err) {
+    return {
+      err,
+    };
   }
 };

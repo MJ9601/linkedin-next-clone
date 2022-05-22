@@ -4,6 +4,7 @@ import { MantineProvider } from "@mantine/core";
 import { NextPage } from "next";
 import { ReactElement, ReactNode } from "react";
 import { SessionProvider } from "next-auth/react";
+import { RecoilRoot } from "recoil";
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -24,15 +25,17 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
       </Head>
-      <MantineProvider
-        // withGlobalStyles
-        withNormalizeCSS
-        theme={{ colorScheme: "light" }}
-      >
-        <SessionProvider session={pageProps.session}>
-          {getLayout(<Component {...pageProps} />)}
-        </SessionProvider>
-      </MantineProvider>
+      <RecoilRoot>
+        <MantineProvider
+          // withGlobalStyles
+          withNormalizeCSS
+          theme={{ colorScheme: "light" }}
+        >
+          <SessionProvider session={pageProps.session}>
+            {getLayout(<Component {...pageProps} />)}
+          </SessionProvider>
+        </MantineProvider>
+      </RecoilRoot>
     </>
   );
 }

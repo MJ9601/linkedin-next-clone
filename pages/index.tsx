@@ -71,7 +71,7 @@ const Home = ({ posts }: { posts: Post[] }) => {
     return () => {
       clearInterval(getpost);
     };
-  }, [text]);
+  }, []);
 
   const createPost = async () => {
     if (!file) {

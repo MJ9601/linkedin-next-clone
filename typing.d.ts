@@ -16,8 +16,8 @@ export type Comment = {
   _id: string;
   author: string;
   text: string;
-  post: Post;
-  createdAt: string;
+  post: string;
+  createdAt: TDate;
 };
 
 export type User = {

@@ -1,29 +1,36 @@
 import { Avatar, createStyles, Paper } from "@mantine/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import TimeAgo from "timeago-react";
+import { Comment, User } from "../typing";
 
-const Comment = ({ info }: { info: any }) => {
+const Comment_ = ({ info }: { info: Comment }) => {
   const { classes } = useStyles();
+
+  const [author, setAuthor] = useState<null | User>(null);
+  useEffect(() => {
+    const getAuthor = async (authorId: string) =>
+      setAuthor(await (await fetch(`/api/users/${authorId}`)).json());
+
+    getAuthor(info.author);
+  }, [info]);
   return (
     <div className={classes.wrapper}>
-      <Paper shadow="md" px="md" pt="sm" pb="xl">
-        <h3 className={classes.title}>Auther</h3>
-        <p className={classes.text}>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sapiente
-          nisi neque molestias possimus deleniti amet nam temporibus. Mollitia,
-          reiciendis quasi!
+      <Paper shadow="md" px="md" pt="sm" pb="xl" sx={{ position: "relative" }}>
+        <h3 className={classes.title}>{author?.name}</h3>
+        <p className={classes.text}>{info.text}</p>
+        <p className={classes.date}>
+          <TimeAgo datetime={info.createdAt} />
         </p>
-        <p className={classes.date}>Date noew year</p>
       </Paper>
-      <Avatar src="" radius="xl" />
+      <Avatar src={author?.picture} radius="xl" />
     </div>
   );
 };
 
-export default Comment;
+export default Comment_;
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
-    position: "relative",
     width: "100%",
     margin: "5px 0",
     padding: "0",
@@ -42,7 +49,7 @@ const useStyles = createStyles((theme) => ({
     margin: 0,
     marginBottom: 3,
     fontWeight: 600,
-    fontSize: 17,
+    fontSize: 10,
     color: "gray",
   },
   date: {

@@ -1,5 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { deletePostById, getPostById } from "../../../posts/services/posts";
+import {
+  deletePostById,
+  getPostById,
+  updatePostComments,
+  updatePostLikes,
+} from "../../../posts/services/posts";
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,6 +14,7 @@ export default async function handler(
     query: { id },
     cookies,
     method,
+    body,
   } = req;
 
   const userAccessToken = cookies["next-auth.session-token"];
@@ -31,7 +37,18 @@ export default async function handler(
     }
   } else if (method == "PUT") {
     // update the likes
+
+    const { post, err } = await updatePostLikes(String(id), userAccessToken);
+    !err ? res.status(201).send(post) : res.status(400).send(err);
   } else if (method == "PATCH") {
     // updated comments
+
+    const { post, err } = await updatePostComments(
+      String(id),
+      userAccessToken,
+      body
+    );
+    console.log(post);
+    !err ? res.status(201).send(post) : res.status(400).send(err);
   }
 }

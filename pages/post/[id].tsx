@@ -14,8 +14,9 @@ const Post_ = ({ post }: { post: Post }) => {
       </Head>
       <PostCard post={post} postPage />
       <Divider my="sm" label="Comments" />
-      <Comment info={""} />
-      <Comment info={""} />
+      {post?.comments?.map((comment) => (
+        <Comment info={comment} key={comment._id} />
+      ))}
     </div>
   );
 };

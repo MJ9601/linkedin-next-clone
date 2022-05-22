@@ -11,26 +11,35 @@ import {
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import { Send } from "tabler-icons-react";
+import { commentModalState } from "../atoms/commentModalAtom";
 import { Post, User } from "../typing";
+import PostActionButtom from "./PostActionButtom";
 import PostCardHeader from "./PostCardHeader";
 
 const PostCard = ({ post, postPage }: { post: Post; postPage?: boolean }) => {
   const { classes } = useStyle({ postPage });
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [opened, setOpened] = useState(false);
+  const [opened, setOpened] = useRecoilState(commentModalState);
   const [author, setAuthor] = useState<null | User>(null);
+  const [comment, setComment] = useState<string>("");
 
-  const handleDel = async () => {
+  const handleComment = async () => {
     await (
       await fetch(`/api/posts/${post._id}`, {
-        method: "DELETE",
+        method: "PATCH",
+        body: JSON.stringify({
+          text: comment,
+        }),
         headers: {
           "Content-Type": "application/json",
         },
       })
     ).json();
+    setComment("");
+    setOpened(false);
   };
 
   useEffect(() => {
@@ -54,8 +63,10 @@ const PostCard = ({ post, postPage }: { post: Post; postPage?: boolean }) => {
           minRows={4}
           autosize
           maxRows={6}
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
         />
-        <Button fullWidth mt="md">
+        <Button fullWidth mt="md" onClick={handleComment}>
           Publish
         </Button>
       </Modal>
@@ -83,61 +94,37 @@ const PostCard = ({ post, postPage }: { post: Post; postPage?: boolean }) => {
         </div>
         <Divider my="sm" />
         <Group position="apart" px="md">
-          <Button
-            variant="white"
-            color="dark"
-            size="xs"
-            sx={{ ":hover": { color: "blue" } }}
-            leftIcon={
-              <ThumbUpIcon
-                style={{ height: "20px", padding: "0", margin: "0" }}
+          <PostActionButtom
+            Icon={ThumbUpIcon}
+            color="green"
+            postId={post._id}
+            title="Like"
+            count={post?.likes?.length}
+          />
+          <PostActionButtom
+            Icon={ChatAltIcon}
+            color="#86EBFF"
+            postId={post._id}
+            title="Comment"
+            count={post?.comments?.length}
+          />
+          {session?.user?.email !== author?.email && (
+            <>
+              <PostActionButtom
+                Icon={TrashIcon}
+                color="red"
+                postId={post._id}
+                title="Delete"
               />
-            }
-          >
-            Like
-          </Button>
-          {session?.user?.email !== author?.email ? (
-            <Button
-              variant="white"
-              color="dark"
-              size="xs"
-              sx={{ ":hover": { color: "blue" } }}
-              leftIcon={
-                <ChatAltIcon
-                  style={{ height: "20px", padding: "0", margin: "0" }}
-                />
-              }
-              onClick={() => setOpened(true)}
-            >
-              Comment
-            </Button>
-          ) : (
-            <Button
-              variant="white"
-              color="dark"
-              size="xs"
-              sx={{ ":hover": { color: "blue" } }}
-              leftIcon={
-                <TrashIcon
-                  style={{ height: "20px", padding: "0", margin: "0" }}
-                />
-              }
-              onClick={handleDel}
-            >
-              Delete
-            </Button>
+            </>
           )}
-          <Button
-            variant="white"
-            color="dark"
-            size="xs"
-            sx={{ ":hover": { color: "blue" } }}
-            leftIcon={
-              <Send style={{ height: "20px", padding: "0", margin: "0" }} />
-            }
-          >
-            Share
-          </Button>
+          <PostActionButtom
+            Icon={Send}
+            color="blue"
+            postId={post._id}
+            title="Share"
+            count={0}
+          />
         </Group>
       </Paper>
     </>
