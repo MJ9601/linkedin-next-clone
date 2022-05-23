@@ -11,7 +11,6 @@ export const createNewPost = async ({
   authorToken: string;
 }) => {
   const { db } = await connectToDB();
-  console.log(body);
 
   const decoded = await decode({
     token: authorToken,
@@ -90,7 +89,8 @@ export const updatePostLikes = async (id: string, accessToken: string) => {
       .collection("posts")
       .updateOne(
         { _id: new ObjectId(id) },
-        { $addToSet: { likes: { $each: [decoded?.sub] } } }
+        { $addToSet: { likes: { $each: [decoded?.sub] } } },
+        { new: true }
       );
     return { post };
   } catch (err) {
@@ -125,7 +125,8 @@ export const updatePostComments = async (
             ],
           },
         },
-      }
+      },
+      { upsert: true }
     );
     return { post };
   } catch (err) {

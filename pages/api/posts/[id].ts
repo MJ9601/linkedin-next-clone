@@ -48,7 +48,6 @@ export default async function handler(
       userAccessToken,
       body
     );
-    console.log(post);
     !err ? res.status(201).send(post) : res.status(400).send(err);
   }
 }

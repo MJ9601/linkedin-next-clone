@@ -43,5 +43,9 @@ const useStyle = createStyles((theme) => ({
     margin: 0,
     fontSize: "13px",
     fontWeight: "bold",
+
+    [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
+      display: "none",
+    },
   },
 }));

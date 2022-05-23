@@ -11,7 +11,9 @@ import {
   Group,
   Modal,
   Paper,
+  RingProgress,
   Stack,
+  Text,
   Textarea,
 } from "@mantine/core";
 import PostCard from "../components/PostCard";
@@ -22,9 +24,11 @@ import {
   VideoCameraIcon,
 } from "@heroicons/react/solid";
 import { FileUpload, Notes } from "tabler-icons-react";
-import { Dropzone } from "@mantine/dropzone";
+import { Dropzone, IMAGE_MIME_TYPE, MIME_TYPES } from "@mantine/dropzone";
 import { Post } from "../typing";
 import { useEffect } from "react";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { storage } from "../lib/firebaseConfig";
 
 const useStyles = createStyles((theme) => ({
   postCreater: {
@@ -58,10 +62,10 @@ const Home = ({ posts }: { posts: Post[] }) => {
   const { data: session, status } = useSession();
   const { classes } = useStyles();
   const [opened, setOpened] = useState(false);
-  const [file, setFile] = useState<null | File>(null);
   const [fileUrl, setFileUrl] = useState("");
   const [text, setText] = useState("");
   const [_posts, setPosts] = useState<[] | Post[]>(posts);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     let getpost = setInterval(async () => {
@@ -73,21 +77,51 @@ const Home = ({ posts }: { posts: Post[] }) => {
     };
   }, []);
 
+  const uploadFile = (file: File) => {
+    const storageRef = ref(storage, file.name);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setProgress(progress);
+        switch (snapshot.state) {
+          case "paused":
+            console.log("upload is paused");
+            break;
+          case "canceled":
+            console.log("upload is canceled");
+            break;
+        }
+      },
+      (error) => {
+        console.log(error);
+      },
+      () =>
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+          setFileUrl(downloadURL)
+        )
+    );
+  };
+
   const createPost = async () => {
-    if (!file) {
-      await (
-        await fetch("/api/posts", {
-          method: "POST",
-          body: JSON.stringify({
-            text: text,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-      ).json();
-    }
+    await (
+      await fetch("/api/posts", {
+        method: "POST",
+        body: JSON.stringify({
+          text: text,
+          imageUrl: !fileUrl ? "" : fileUrl,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    ).json();
+
     setText("");
+    setFileUrl("");
     setOpened(false);
   };
 
@@ -108,15 +142,45 @@ const Home = ({ posts }: { posts: Post[] }) => {
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <Dropzone onDrop={(files) => {}}>
-          {(status) => (
-            <div className={classes.uploadFile}>
-              <FileUpload />
-              <p className={classes.title}>Drag/Select a Video or Picture</p>
-              <p className={classes.cusionTag}>File should not exceed 5mb</p>
+        {fileUrl || (progress > 0 && progress < 100) ? (
+          <>
+            <div style={{ display: "grid", placeItems: "center" }}>
+              {!fileUrl ? (
+                <RingProgress
+                  roundCaps
+                  thickness={12}
+                  sections={[{ value: progress, color: "blue" }]}
+                  label={
+                    <Text color="blue" weight={700} align="center" size="md">
+                      {Math.floor(progress)}%
+                    </Text>
+                  }
+                />
+              ) : (
+                <Text color="blue" weight={700} align="center" size="md">
+                  {fileUrl}
+                </Text>
+              )}
             </div>
-          )}
-        </Dropzone>
+          </>
+        ) : (
+          <Dropzone
+            onDrop={(files) => {
+              uploadFile(files[0]);
+            }}
+            onReject={(files) => alert("rejected files")}
+            maxSize={5 * 1024 ** 2}
+            accept={IMAGE_MIME_TYPE}
+          >
+            {(status) => (
+              <div className={classes.uploadFile}>
+                <FileUpload />
+                <p className={classes.title}>Drag/Select a Picture</p>
+                <p className={classes.cusionTag}>File should not exceed 5mb</p>
+              </div>
+            )}
+          </Dropzone>
+        )}
         <Button mt="md" fullWidth onClick={createPost}>
           Publish
         </Button>

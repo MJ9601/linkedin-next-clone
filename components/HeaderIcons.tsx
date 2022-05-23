@@ -1,4 +1,4 @@
-import { Avatar, Box, MediaQuery, Text } from "@mantine/core";
+import { Avatar, Box, createStyles, MediaQuery, Text } from "@mantine/core";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -23,6 +23,7 @@ const HeaderIcons = ({
     },
   });
 
+  const { classes } = useStyles();
   return (
     <Box
       sx={{
@@ -40,7 +41,7 @@ const HeaderIcons = ({
       }}
     >
       {Icon ? (
-        <Icon style={{ height: "25px" }} />
+        <Icon className={classes.icon} />
       ) : (
         <Avatar
           src={AvatarSrc}
@@ -60,3 +61,13 @@ const HeaderIcons = ({
 };
 
 export default HeaderIcons;
+
+const useStyles = createStyles((theme) => ({
+  icon: {
+    height: "25px",
+
+    [`@media (max-width: ${theme.breakpoints.xs}px)`]: {
+      height: "18px",
+    },
+  },
+}));

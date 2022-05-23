@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 
 export const commentModalState = atom({
-  key: "commentModalState",
+  key: "ModalState",
   default: false,
 });

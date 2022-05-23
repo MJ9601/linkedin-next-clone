@@ -38,6 +38,7 @@ const PostCard = ({ post, postPage }: { post: Post; postPage?: boolean }) => {
         },
       })
     ).json();
+
     setComment("");
     setOpened(false);
   };
@@ -71,7 +72,7 @@ const PostCard = ({ post, postPage }: { post: Post; postPage?: boolean }) => {
         </Button>
       </Modal>
 
-      <Paper shadow="md" radius="md" py="sm">
+      <Paper shadow="md" radius="md" py="sm" sx={{ maxWidth: "95%" }}>
         <div
           style={{ cursor: !postPage ? "pointer" : "default" }}
           onClick={() => {
@@ -85,15 +86,21 @@ const PostCard = ({ post, postPage }: { post: Post; postPage?: boolean }) => {
           <div className={classes.wrapper}>
             <p className={classes.text}>{post.text}</p>
             {post.imageUrl && (
-              <img
-                className={classes.img}
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMJ86C4k1NiGgExR5nL_EVmOX10eKWM5vFwlsp9b0nvhXvbvXAIMnhqBqjZRZLCzIoaSY&usqp=CAU"
-              />
+              <img className={classes.img} src={post.imageUrl} />
             )}
           </div>
         </div>
         <Divider my="sm" />
-        <Group position="apart" px="md">
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "nowrap",
+            justifyContent: "space-around",
+            width: "95%",
+            margin: "auto",
+            padding: "0 10px",
+          }}
+        >
           <PostActionButtom
             Icon={ThumbUpIcon}
             color="green"
@@ -108,7 +115,7 @@ const PostCard = ({ post, postPage }: { post: Post; postPage?: boolean }) => {
             title="Comment"
             count={post?.comments?.length}
           />
-          {session?.user?.email !== author?.email && (
+          {session?.user?.email === author?.email && (
             <>
               <PostActionButtom
                 Icon={TrashIcon}
@@ -125,7 +132,7 @@ const PostCard = ({ post, postPage }: { post: Post; postPage?: boolean }) => {
             title="Share"
             count={0}
           />
-        </Group>
+        </div>
       </Paper>
     </>
   );

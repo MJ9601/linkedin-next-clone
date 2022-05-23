@@ -81,5 +81,13 @@ const useStyles = createStyles((theme, { color }: { color: string }) => ({
   },
   count: { padding: "0", margin: "0", fontSize: "15px" },
   icon: { padding: "0", margin: "0", height: 17 },
-  title: { padding: "0", margin: "0", fontSize: "15px", fontWeight: 500 },
+  title: {
+    padding: "0",
+    margin: "0",
+    fontSize: "15px",
+    fontWeight: 500,
+    [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
+      display: "none",
+    },
+  },
 }));
