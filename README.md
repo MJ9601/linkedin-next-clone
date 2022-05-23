@@ -14,7 +14,7 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## The Tech which is used in this project
+## The Teches which are used in this project
 
 The Tech which is used in this project is listed below:
 
@@ -25,9 +25,16 @@ Next Auth
 Recoil
 Mantine UI
 tabler-icons-react
-...
+heroicons
+mongodb
+firebase storage
+
 ```
+
+## status:
+
+Ready for deploy.
 
 ## Deploy on Vercel
 
-This app after finishing will be depolyed on vercel server. The link to the Project will be add below:
+This app after finishing will be deployed on vercel server. The link to the Project will be add below:
