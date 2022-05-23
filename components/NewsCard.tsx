@@ -1,10 +1,12 @@
-import { Center, Stack} from "@mantine/core";
+import { Center, Stack } from "@mantine/core";
 import { Circle } from "tabler-icons-react";
+import TimeAgo from "timeago-react";
 
-const NewsCard = () => {
+const NewsCard = ({ news }: { news: any }) => {
   return (
     <Center
       sx={{
+        margin: 0,
         width: "100%",
         justifyContent: "left",
         alignItems: "center",
@@ -12,11 +14,16 @@ const NewsCard = () => {
         padding: "0 5px",
         borderRadius: "7px",
         cursor: "pointer",
+        color: "#333",
+        textDecoration: "none",
         ":hover": {
           background: "#eee",
         },
       }}
       my={-15}
+      component="a"
+      href={news.url}
+      target="_blank"
     >
       <Circle fill="black" size={10} color="#444" />
       <Stack spacing="xs" sx={{ width: "80%" }}>
@@ -29,9 +36,7 @@ const NewsCard = () => {
             fontWeight: 500,
           }}
         >
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quam quaerat
-          impedit corrupti obcaecati sequi exercitationem. Sed dolorem maiores
-          enim ea architecto voluptates magni ex dolor?
+          {news.title}
         </p>
         <p
           style={{
@@ -41,7 +46,7 @@ const NewsCard = () => {
             color: "gray",
           }}
         >
-          3 hours ago
+          <TimeAgo datetime={news.publishedAt} />
         </p>
       </Stack>
     </Center>

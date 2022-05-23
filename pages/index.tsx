@@ -29,36 +29,16 @@ import { Post } from "../typing";
 import { useEffect } from "react";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../lib/firebaseConfig";
+import { useRecoilState } from "recoil";
+import { newsState } from "../atoms/newsAtom";
 
-const useStyles = createStyles((theme) => ({
-  postCreater: {
-    border: "1px solid gray",
-    width: "90%",
-    padding: "8px 10px",
-    borderRadius: "99px",
-    margin: "0",
-    cursor: "pointer",
-  },
-  uploadFile: {
-    width: "100%",
-    height: "fit-content",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "gray",
-    gap: "3px",
-  },
-  cusionTag: {
-    margin: 0,
-    fontSize: 12,
-  },
-  title: {
-    margin: "2px 0",
-  },
-}));
-
-const Home = ({ posts }: { posts: Post[] }) => {
+const Home = ({
+  posts,
+  newsheadLine,
+}: {
+  posts: Post[];
+  newsheadLine: any;
+}) => {
   const { data: session, status } = useSession();
   const { classes } = useStyles();
   const [opened, setOpened] = useState(false);
@@ -66,6 +46,9 @@ const Home = ({ posts }: { posts: Post[] }) => {
   const [text, setText] = useState("");
   const [_posts, setPosts] = useState<[] | Post[]>(posts);
   const [progress, setProgress] = useState(0);
+  const [news, setNews] = useRecoilState(newsState);
+
+  setNews(newsheadLine.articles);
 
   useEffect(() => {
     let getpost = setInterval(async () => {
@@ -223,10 +206,44 @@ export const getServerSideProps = async () => {
 
   const url = `${baseUrl}/api/posts`;
   const posts = await (await fetch(url)).json();
+  const newsheadLine = await (
+    await fetch(
+      `https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=${process.env.NEWS_API_KEY}`
+    )
+  ).json();
 
   return {
     props: {
       posts,
+      newsheadLine,
     },
   };
 };
+
+const useStyles = createStyles((theme) => ({
+  postCreater: {
+    border: "1px solid gray",
+    width: "90%",
+    padding: "8px 10px",
+    borderRadius: "99px",
+    margin: "0",
+    cursor: "pointer",
+  },
+  uploadFile: {
+    width: "100%",
+    height: "fit-content",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "gray",
+    gap: "3px",
+  },
+  cusionTag: {
+    margin: 0,
+    fontSize: 12,
+  },
+  title: {
+    margin: "2px 0",
+  },
+}));

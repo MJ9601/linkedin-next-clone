@@ -38,10 +38,10 @@ import { MongoClient, MongoClientOptions } from "mongodb";
 // const uri = String(process.env.MONGODB_URI);
 
 const uri = "mongodb://localhost:27017/linkedin"; //local server;
-const options: MongoClientOptions = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-};
+// const options: MongoClientOptions = {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// };
 
 let client: any;
 let clientPromise: any;
@@ -52,7 +52,7 @@ if (!process.env.MONGODB_URI)
 if (process.env.NODE_ENV === "development") {
   // read the documentation for more details
 
-  client = new MongoClient(uri, options);
+  client = new MongoClient(uri);
   clientPromise = client.connect();
 }
 

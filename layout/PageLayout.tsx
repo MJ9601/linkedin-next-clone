@@ -34,9 +34,12 @@ import {
 import HeaderIcons from "../components/HeaderIcons";
 import { useSession } from "next-auth/react";
 import NewsCard from "../components/NewsCard";
+import { useRecoilState } from "recoil";
+import { newsState } from "../atoms/newsAtom";
 
 const PageLayout = ({ children }: { children: ReactElement }) => {
   const { data: session, status } = useSession();
+  const [news, setNews] = useRecoilState(newsState);
   return (
     <AppShell
       sx={{ background: "rgb(245, 247, 248)" }}
@@ -222,11 +225,18 @@ const PageLayout = ({ children }: { children: ReactElement }) => {
                     />
                   </Center>
                   {/* new section */}
-                  <NewsCard />
-                  <NewsCard />
-                  <NewsCard />
-                  <NewsCard />
-                  <NewsCard />
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      
+                    }}
+                  >
+                    {news?.map((element, index) => (
+                      <NewsCard news={element} key={index} />
+                    ))}
+                  </div>
                 </Stack>
               </Card>
               <Paper
